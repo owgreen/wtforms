@@ -467,6 +467,10 @@ class TestRadioField:
     class F(Form):
         a = RadioField(choices=[("a", "hello"), ("b", "bye")], default="a")
         b = RadioField(choices=[(1, "Item 1"), (2, "Item 2")], coerce=int)
+        c = RadioField(
+            choices=[("a", "hello"), ("b", "bye")],
+            validators=[validators.InputRequired()],
+        )
 
     def test(self):
         form = self.F()
@@ -509,6 +513,17 @@ class TestRadioField:
             '<label for="a-0">yes</label></li>'
             '<li><input id="a-1" name="a" type="radio" value="False"> '
             '<label for="a-1">no</label></li>'
+            "</ul>"
+        )
+
+    def test_required_flag(self):
+        form = self.F()
+        assert form.c() == (
+            '<ul id="c">'
+            '<li><input id="c-0" name="c" required type="radio" value="a"> '
+            '<label for="c-0">hello</label></li>'
+            '<li><input id="c-1" name="c" required type="radio" value="b"> '
+            '<label for="c-1">bye</label></li>'
             "</ul>"
         )
 
